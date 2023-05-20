@@ -2,8 +2,6 @@ package edu.craptocraft.quickstart;
 
 import java.net.URI;
 
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -17,9 +15,6 @@ import jakarta.ws.rs.core.Response;
 @Path("/dev")
 public class GreetingResource {
 
-    @Inject
-    EntityManager em;
-
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
@@ -30,16 +25,14 @@ public class GreetingResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createDev(Developer dev) {
-
-        em.persist(dev);
-
-        return Response.created(URI.create("/dev/" + dev.getId())).build();
+        dev.persist();
+        return Response.created(URI.create("/dev/" + dev.id)).build();
     }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Developer getDev(@PathParam("id") Integer id) {
-        return em.find(Developer.class, id);
+    public Developer getDev(@PathParam("id") Long id) {
+        return Developer.findById(id);
     }
 }
