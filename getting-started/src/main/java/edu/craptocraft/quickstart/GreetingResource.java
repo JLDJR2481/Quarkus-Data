@@ -1,7 +1,9 @@
 package edu.craptocraft.quickstart;
 
 import java.net.URI;
+import java.util.List;
 
+import io.smallrye.common.constraint.NotNull;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -18,7 +20,7 @@ public class GreetingResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "Bienvenido a Quarkus Data";
+        return "\nBienvenido a Quarkus Data";
     }
 
     @POST
@@ -30,9 +32,24 @@ public class GreetingResource {
     }
 
     @GET
-    @Path("{id}")
+    @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Developer getDev(@PathParam("id") Long id) {
-        return Developer.findById(id);
+    public List<Developer> getAllDevs() {
+        return Developer.findAll().list();
+    }
+
+    @GET
+    @Path("{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Developer findByName(@PathParam("name") String name) {
+        return Developer.find("name", name).firstResult();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{name}/{age}")
+    public Developer findByNameAge(@NotNull @PathParam("name") String name, @PathParam("age") Integer age) {
+
+        return Developer.find("name = ?1 and age = ?2", name, age).firstResult();
     }
 }

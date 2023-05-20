@@ -15,7 +15,7 @@ public class GreetingResourceTest {
                 .when().get("/dev")
                 .then()
                 .statusCode(200)
-                .body(is("Bienvenido a Quarkus Data"));
+                .body(is("\nBienvenido a Quarkus Data"));
     }
 
 }
